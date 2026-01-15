@@ -33,30 +33,30 @@ function getDelayMultiplier(word) {
   const cleaned = word.toLowerCase().replace(/[^a-z]/g, '')
   let multiplier = 1
 
-  // Common words are faster
+  // Common words are slightly faster
   if (COMMON_WORDS.has(cleaned)) {
-    multiplier *= 0.8
+    multiplier *= 0.9
   }
 
-  // Longer words need more time
+  // Longer words need slightly more time
   const len = cleaned.length
   if (len <= 3) {
-    multiplier *= 0.9
+    multiplier *= 0.95
   } else if (len <= 5) {
     multiplier *= 1.0
   } else if (len <= 8) {
-    multiplier *= 1.15
+    multiplier *= 1.05
   } else if (len <= 12) {
-    multiplier *= 1.3
+    multiplier *= 1.1
   } else {
-    multiplier *= 1.5
+    multiplier *= 1.15
   }
 
   // Pause slightly at end of sentences
   if (/[.!?]$/.test(word)) {
-    multiplier *= 1.5
-  } else if (/[,;:]$/.test(word)) {
     multiplier *= 1.2
+  } else if (/[,;:]$/.test(word)) {
+    multiplier *= 1.1
   }
 
   return multiplier
