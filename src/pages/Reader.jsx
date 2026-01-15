@@ -318,7 +318,7 @@ function Reader() {
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect()
           const percent = ((e.clientX - rect.left) / rect.width) * 100
-          setHoverPercent(Math.max(0, Math.min(100, Math.round(percent))))
+          setHoverPercent(Math.max(0, Math.min(100, Math.round(percent * 10) / 10)))
         }}
         onMouseLeave={() => setHoverPercent(null)}
         title="Click to jump to position"
@@ -326,7 +326,7 @@ function Reader() {
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
         {hoverPercent !== null && (
           <div className="progress-hover" style={{ left: `${hoverPercent}%` }}>
-            <span className="progress-hover-label">{hoverPercent}%</span>
+            <span className="progress-hover-label">{hoverPercent.toFixed(1)}%</span>
           </div>
         )}
         <span className="progress-percent">{Math.round(progress)}%</span>
