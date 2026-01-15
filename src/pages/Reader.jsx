@@ -76,6 +76,7 @@ function Reader() {
   const [showChapters, setShowChapters] = useState(false)
   const [chapters, setChapters] = useState(null)
   const [notFound, setNotFound] = useState(false)
+  const [hoverPercent, setHoverPercent] = useState(null)
   const intervalRef = useRef(null)
   const textIdRef = useRef(id)
 
@@ -314,9 +315,20 @@ function Reader() {
           const newIndex = Math.floor(percent * words.length)
           setCurrentIndex(Math.max(0, Math.min(words.length - 1, newIndex)))
         }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const percent = ((e.clientX - rect.left) / rect.width) * 100
+          setHoverPercent(Math.max(0, Math.min(100, Math.round(percent))))
+        }}
+        onMouseLeave={() => setHoverPercent(null)}
         title="Click to jump to position"
       >
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+        {hoverPercent !== null && (
+          <div className="progress-hover" style={{ left: `${hoverPercent}%` }}>
+            <span className="progress-hover-label">{hoverPercent}%</span>
+          </div>
+        )}
         <span className="progress-percent">{Math.round(progress)}%</span>
       </div>
 
