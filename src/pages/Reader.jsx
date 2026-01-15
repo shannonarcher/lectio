@@ -12,6 +12,56 @@ function getORPIndex(word) {
   return 5
 }
 
+// Common words that can be read quickly
+const COMMON_WORDS = new Set([
+  'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
+  'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+  'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
+  'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
+  'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
+  'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
+  'into', 'your', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now',
+  'its', 'our', 'two', 'way', 'had', 'was', 'were', 'been', 'has', 'is',
+  'am', 'are', 'did', 'does', 'done', 'got', 'went', 'come', 'came', 'said',
+  'very', 'after', 'most', 'also', 'made', 'did', 'many', 'before', 'must', 'through',
+  'back', 'years', 'where', 'much', 'your', 'may', 'well', 'down', 'should', 'because',
+  'each', 'just', 'those', 'people', 'how', 'too', 'any', 'same', 'us', 'need'
+])
+
+// Calculate delay multiplier for a word
+function getDelayMultiplier(word) {
+  const cleaned = word.toLowerCase().replace(/[^a-z]/g, '')
+  let multiplier = 1
+
+  // Common words are faster
+  if (COMMON_WORDS.has(cleaned)) {
+    multiplier *= 0.8
+  }
+
+  // Longer words need more time
+  const len = cleaned.length
+  if (len <= 3) {
+    multiplier *= 0.9
+  } else if (len <= 5) {
+    multiplier *= 1.0
+  } else if (len <= 8) {
+    multiplier *= 1.15
+  } else if (len <= 12) {
+    multiplier *= 1.3
+  } else {
+    multiplier *= 1.5
+  }
+
+  // Pause slightly at end of sentences
+  if (/[.!?]$/.test(word)) {
+    multiplier *= 1.5
+  } else if (/[,;:]$/.test(word)) {
+    multiplier *= 1.2
+  }
+
+  return multiplier
+}
+
 function Reader() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -90,11 +140,21 @@ function Reader() {
     setWpm(prev => Math.min(1000, Math.max(100, prev + delta)))
   }, [])
 
-  // Playback interval
+  // Playback with variable timing
   useEffect(() => {
-    if (isPlaying && words.length > 0) {
-      const interval = 60000 / wpm
-      intervalRef.current = setInterval(() => {
+    if (!isPlaying || words.length === 0) {
+      return
+    }
+
+    const scheduleNext = () => {
+      const currentWord = words[currentIndex]
+      if (!currentWord) return
+
+      const baseInterval = 60000 / wpm
+      const multiplier = getDelayMultiplier(currentWord)
+      const delay = baseInterval * multiplier
+
+      intervalRef.current = setTimeout(() => {
         setCurrentIndex(prev => {
           if (prev >= words.length - 1) {
             setIsPlaying(false)
@@ -102,15 +162,17 @@ function Reader() {
           }
           return prev + 1
         })
-      }, interval)
+      }, delay)
     }
+
+    scheduleNext()
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current)
+        clearTimeout(intervalRef.current)
       }
     }
-  }, [isPlaying, wpm, words.length])
+  }, [isPlaying, wpm, words, currentIndex])
 
   // Keyboard controls
   useEffect(() => {

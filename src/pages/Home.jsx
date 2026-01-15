@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { loadSavedTexts, saveSavedTexts, generateId, getPreview } from '../storage'
+import { parseEPUB } from '../epub'
 
 function Home() {
   const [text, setText] = useState('')
   const [wpm, setWpm] = useState(300)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const fileInputRef = useRef(null)
   const navigate = useNavigate()
   const savedTexts = loadSavedTexts()
 
@@ -20,6 +24,49 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
 
   const loadSample = () => {
     setText(sampleText)
+  }
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const { title, text: epubText } = await parseEPUB(file)
+
+      const cleanedWords = epubText
+        .trim()
+        .split(/\s+/)
+        .filter(w => w.length > 0)
+
+      if (cleanedWords.length === 0) {
+        throw new Error('No readable text found in EPUB')
+      }
+
+      const newText = {
+        id: generateId(),
+        text: epubText,
+        preview: title || getPreview(epubText),
+        progress: 0,
+        totalWords: cleanedWords.length,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      }
+
+      const updated = [newText, ...savedTexts]
+      saveSavedTexts(updated)
+
+      navigate(`/read/${newText.id}`, { state: { wpm } })
+    } catch (err) {
+      setError(err.message || 'Failed to parse EPUB file')
+    } finally {
+      setLoading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
   }
 
   const startReading = () => {
@@ -60,9 +107,27 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
       />
 
       {!text.trim() && (
-        <button className="sample-button" onClick={loadSample}>
-          Try a sample (Alice in Wonderland)
-        </button>
+        <div className="text-options">
+          <button className="sample-button" onClick={loadSample}>
+            Try a sample
+          </button>
+          <span className="text-options-divider">or</span>
+          <label className="sample-button epub-button">
+            {loading ? 'Loading...' : 'Upload EPUB'}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".epub"
+              onChange={handleFileSelect}
+              disabled={loading}
+              hidden
+            />
+          </label>
+        </div>
+      )}
+
+      {error && (
+        <p className="error-message">{error}</p>
       )}
 
       <div className="controls-row">

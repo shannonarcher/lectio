@@ -122,8 +122,19 @@
   letter-spacing: 0.1em;
 }
 
-.sample-button {
+.text-options {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-top: 1rem;
+}
+
+.text-options-divider {
+  color: #444;
+  font-size: 0.875rem;
+}
+
+.sample-button {
   background: none;
   border: none;
   color: #666;
@@ -134,6 +145,16 @@
 
 .sample-button:hover {
   color: #999;
+}
+
+.epub-button {
+  cursor: pointer;
+}
+
+.error-message {
+  color: #e63946;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
 }
 
 .start-button {
