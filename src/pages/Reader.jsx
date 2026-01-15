@@ -72,6 +72,7 @@ function Reader() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [wpm, setWpm] = useState(location.state?.wpm || 300)
   const [showContext, setShowContext] = useState(false)
+  const [variableTiming, setVariableTiming] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const intervalRef = useRef(null)
   const textIdRef = useRef(id)
@@ -136,6 +137,10 @@ function Reader() {
     })
   }, [])
 
+  const toggleVariableTiming = useCallback(() => {
+    setVariableTiming(prev => !prev)
+  }, [])
+
   const adjustWpm = useCallback((delta) => {
     setWpm(prev => Math.min(1000, Math.max(100, prev + delta)))
   }, [])
@@ -151,7 +156,7 @@ function Reader() {
       if (!currentWord) return
 
       const baseInterval = 60000 / wpm
-      const multiplier = getDelayMultiplier(currentWord)
+      const multiplier = variableTiming ? getDelayMultiplier(currentWord) : 1
       const delay = baseInterval * multiplier
 
       intervalRef.current = setTimeout(() => {
@@ -172,7 +177,7 @@ function Reader() {
         clearTimeout(intervalRef.current)
       }
     }
-  }, [isPlaying, wpm, words, currentIndex])
+  }, [isPlaying, wpm, words, currentIndex, variableTiming])
 
   // Keyboard controls
   useEffect(() => {
@@ -194,12 +199,14 @@ function Reader() {
         goBack()
       } else if (e.code === 'KeyC') {
         toggleContext()
+      } else if (e.code === 'KeyV') {
+        toggleVariableTiming()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [togglePlay, goBack, toggleContext, adjustWpm, words.length])
+  }, [togglePlay, goBack, toggleContext, toggleVariableTiming, adjustWpm, words.length])
 
   if (notFound) {
     return (
@@ -265,6 +272,9 @@ function Reader() {
         <button onClick={toggleContext} className={`control-button ${showContext ? 'active' : ''}`}>
           Context
         </button>
+        <button onClick={toggleVariableTiming} className={`control-button ${variableTiming ? 'active' : ''}`}>
+          Variable
+        </button>
         <button onClick={togglePlay} className="control-button play-button">
           {isPlaying ? 'Pause' : 'Play'}
         </button>
@@ -291,7 +301,7 @@ function Reader() {
       </div>
 
       <p className="keyboard-hint">
-        Space: play/pause | ←→: words | ↑↓: speed | C: context | Esc: back
+        Space: play/pause | ←→: words | ↑↓: speed | C: context | V: variable timing | Esc: back
       </p>
     </div>
   )
