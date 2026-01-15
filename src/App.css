@@ -54,9 +54,12 @@
 
 .wpm-control {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+}
+
+.wpm-control.vertical {
+  flex-direction: column;
 }
 
 .wpm-control span {
@@ -68,6 +71,69 @@
 .wpm-control input[type="range"] {
   width: 200px;
   accent-color: #fff;
+}
+
+.wpm-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #fafafa;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.wpm-button:hover:not(:disabled) {
+  background: #252525;
+  border-color: #555;
+}
+
+.wpm-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.wpm-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+}
+
+.wpm-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fafafa;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.wpm-label {
+  font-size: 0.625rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sample-button {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.sample-button:hover {
+  color: #999;
 }
 
 .start-button {

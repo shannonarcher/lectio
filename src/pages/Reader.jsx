@@ -86,6 +86,10 @@ function Reader() {
     })
   }, [])
 
+  const adjustWpm = useCallback((delta) => {
+    setWpm(prev => Math.min(1000, Math.max(100, prev + delta)))
+  }, [])
+
   // Playback interval
   useEffect(() => {
     if (isPlaying && words.length > 0) {
@@ -118,6 +122,12 @@ function Reader() {
         setCurrentIndex(prev => Math.max(0, prev - 1))
       } else if (e.code === 'ArrowRight') {
         setCurrentIndex(prev => Math.min(words.length - 1, prev + 1))
+      } else if (e.code === 'ArrowUp') {
+        e.preventDefault()
+        adjustWpm(25)
+      } else if (e.code === 'ArrowDown') {
+        e.preventDefault()
+        adjustWpm(-25)
       } else if (e.code === 'Escape') {
         goBack()
       } else if (e.code === 'KeyC') {
@@ -127,7 +137,7 @@ function Reader() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [togglePlay, goBack, toggleContext, words.length])
+  }, [togglePlay, goBack, toggleContext, adjustWpm, words.length])
 
   if (notFound) {
     return (
@@ -196,21 +206,30 @@ function Reader() {
         <button onClick={togglePlay} className="control-button play-button">
           {isPlaying ? 'Pause' : 'Play'}
         </button>
-        <label className="wpm-control">
-          <span>{wpm} WPM</span>
-          <input
-            type="range"
-            min="100"
-            max="1000"
-            step="25"
-            value={wpm}
-            onChange={(e) => setWpm(Number(e.target.value))}
-          />
-        </label>
+        <div className="wpm-control">
+          <button
+            className="wpm-button"
+            onClick={() => adjustWpm(-25)}
+            disabled={wpm <= 100}
+          >
+            −
+          </button>
+          <div className="wpm-display">
+            <span className="wpm-value">{wpm}</span>
+            <span className="wpm-label">WPM</span>
+          </div>
+          <button
+            className="wpm-button"
+            onClick={() => adjustWpm(25)}
+            disabled={wpm >= 1000}
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <p className="keyboard-hint">
-        Space: play/pause | Arrows: prev/next | C: context | Esc: back
+        Space: play/pause | ←→: words | ↑↓: speed | C: context | Esc: back
       </p>
     </div>
   )
