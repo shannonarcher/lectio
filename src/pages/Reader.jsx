@@ -317,6 +317,7 @@ function Reader() {
         title="Click to jump to position"
       >
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+        <span className="progress-percent">{Math.round(progress)}%</span>
       </div>
 
       <div className="reader-controls">
