@@ -1,0 +1,153 @@
+.about-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+.back-link {
+  display: inline-block;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: #fff;
+}
+
+.back-link::before {
+  content: '← ';
+}
+
+.about-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+}
+
+.about-section {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid #222;
+}
+
+.about-section.last {
+  border-bottom: none;
+}
+
+.about-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fafafa;
+}
+
+.about-section p {
+  color: #999;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.about-section p:last-child {
+  margin-bottom: 0;
+}
+
+.about-section strong {
+  color: #fafafa;
+  font-weight: 500;
+}
+
+.about-section ul {
+  color: #999;
+  line-height: 2;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+}
+
+.about-section li {
+  margin-bottom: 0.5rem;
+}
+
+.orp-demo {
+  background: #111;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.demo-word {
+  font-size: 2.5rem;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  margin-bottom: 1rem;
+}
+
+.demo-before {
+  color: #fafafa;
+}
+
+.demo-orp {
+  color: #e63946;
+  font-weight: 700;
+}
+
+.demo-after {
+  color: #fafafa;
+}
+
+.demo-caption {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.speed-guide {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.speed-tier {
+  background: #111;
+  border-radius: 8px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.speed-range {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fafafa;
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.speed-label {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 600px) {
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .speed-guide {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .demo-word {
+    font-size: 1.75rem;
+  }
+}
