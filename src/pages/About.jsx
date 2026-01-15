@@ -4,7 +4,7 @@ import '../About.css'
 function About() {
   return (
     <div className="about-container">
-      <Link to="/" className="back-link">
+      <Link to="/" className="back-link" title="Return to the home page">
         Back to Reader
       </Link>
 

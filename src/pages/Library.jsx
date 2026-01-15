@@ -16,7 +16,7 @@ function Library() {
 
   return (
     <div className="container library-container">
-      <Link to="/" className="back-link">
+      <Link to="/" className="back-link" title="Return to the home page">
         Back to Home
       </Link>
 
@@ -34,6 +34,7 @@ function Library() {
                 key={item.id}
                 to={`/read/${item.id}`}
                 className="library-item"
+                title="Continue reading this text"
               >
                 <div className="library-item-content">
                   <p className="library-item-preview">{item.preview}</p>
@@ -49,7 +50,7 @@ function Library() {
                 <button
                   className="library-item-delete"
                   onClick={(e) => deleteText(item.id, e)}
-                  title="Delete"
+                  title="Remove this text from your library"
                 >
                   ×
                 </button>
@@ -59,7 +60,7 @@ function Library() {
         </div>
       )}
 
-      <Link to="/about" className="about-link">
+      <Link to="/about" className="about-link" title="Learn about RSVP speed reading">
         How does this work?
       </Link>
     </div>

@@ -263,19 +263,19 @@ function Reader() {
       </div>
 
       <div className="reader-controls">
-        <button onClick={goBack} className="control-button">
+        <button onClick={goBack} className="control-button" title="Return to home page (Esc)">
           Back
         </button>
-        <button onClick={reset} className="control-button">
+        <button onClick={reset} className="control-button" title="Start over from the beginning">
           Reset
         </button>
-        <button onClick={toggleContext} className={`control-button ${showContext ? 'active' : ''}`}>
+        <button onClick={toggleContext} className={`control-button ${showContext ? 'active' : ''}`} title="Show surrounding words for context (C)">
           Context
         </button>
-        <button onClick={toggleVariableTiming} className={`control-button ${variableTiming ? 'active' : ''}`}>
+        <button onClick={toggleVariableTiming} className={`control-button ${variableTiming ? 'active' : ''}`} title="Adjust timing based on word complexity (V)">
           Variable
         </button>
-        <button onClick={togglePlay} className="control-button play-button">
+        <button onClick={togglePlay} className="control-button play-button" title={isPlaying ? 'Pause reading (Space)' : 'Start reading (Space)'}>
           {isPlaying ? 'Pause' : 'Play'}
         </button>
         <div className="wpm-control">
@@ -283,10 +283,11 @@ function Reader() {
             className="wpm-button"
             onClick={() => adjustWpm(-25)}
             disabled={wpm <= 100}
+            title="Decrease speed by 25 WPM (↓)"
           >
             −
           </button>
-          <div className="wpm-display">
+          <div className="wpm-display" title="Words per minute">
             <span className="wpm-value">{wpm}</span>
             <span className="wpm-label">WPM</span>
           </div>
@@ -294,6 +295,7 @@ function Reader() {
             className="wpm-button"
             onClick={() => adjustWpm(25)}
             disabled={wpm >= 1000}
+            title="Increase speed by 25 WPM (↑)"
           >
             +
           </button>

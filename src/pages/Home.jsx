@@ -108,11 +108,11 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
 
       {!text.trim() && (
         <div className="text-options">
-          <button className="sample-button" onClick={loadSample}>
+          <button className="sample-button" onClick={loadSample} title="Load an excerpt from Alice in Wonderland">
             Try a sample
           </button>
           <span className="text-options-divider">or</span>
-          <label className="sample-button epub-button">
+          <label className="sample-button epub-button" title="Import text from an EPUB ebook file">
             {loading ? 'Loading...' : 'Upload EPUB'}
             <input
               ref={fileInputRef}
@@ -136,10 +136,11 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
             className="wpm-button"
             onClick={() => adjustWpm(-25)}
             disabled={wpm <= 100}
+            title="Decrease reading speed by 25 WPM"
           >
             −
           </button>
-          <div className="wpm-display">
+          <div className="wpm-display" title="Words per minute - your target reading speed">
             <span className="wpm-value">{wpm}</span>
             <span className="wpm-label">WPM</span>
           </div>
@@ -147,6 +148,7 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
             className="wpm-button"
             onClick={() => adjustWpm(25)}
             disabled={wpm >= 1000}
+            title="Increase reading speed by 25 WPM"
           >
             +
           </button>
@@ -157,17 +159,18 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
         className="start-button"
         onClick={startReading}
         disabled={!text.trim()}
+        title="Begin speed reading your text"
       >
         Start Reading
       </button>
 
       {savedTexts.length > 0 && (
-        <Link to="/library" className="library-link">
+        <Link to="/library" className="library-link" title="View and manage your saved texts">
           View Saved Texts ({savedTexts.length})
         </Link>
       )}
 
-      <Link to="/about" className="about-link">
+      <Link to="/about" className="about-link" title="Learn about RSVP speed reading">
         How does this work?
       </Link>
     </div>
