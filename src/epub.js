@@ -40,7 +40,7 @@ function parseOPF(opfContent, opfPath) {
   const titleEl = doc.querySelector('metadata title, metadata dc\\:title')
   const title = titleEl?.textContent || 'Untitled'
 
-  return { spine, title }
+  return { spine, title, manifest }
 }
 
 // Extract text from HTML content
@@ -54,6 +54,64 @@ function extractTextFromHTML(html) {
   // Get text content from body
   const body = doc.body || doc.documentElement
   return body?.textContent || ''
+}
+
+// Try to extract a chapter title from HTML content
+function extractChapterTitle(html) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(html, 'application/xhtml+xml')
+
+  // Look for common chapter heading patterns
+  const headingSelectors = ['h1', 'h2', '.chapter-title', '.title', '[class*="chapter"]']
+  for (const selector of headingSelectors) {
+    const el = doc.querySelector(selector)
+    if (el?.textContent?.trim()) {
+      const title = el.textContent.trim()
+      // Skip if it's just a number or too long
+      if (title.length > 0 && title.length < 100) {
+        return title
+      }
+    }
+  }
+  return null
+}
+
+// Parse NCX file for table of contents
+function parseNCX(ncxContent, opfDir) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(ncxContent, 'application/xml')
+
+  const chapters = []
+  doc.querySelectorAll('navPoint').forEach(navPoint => {
+    const label = navPoint.querySelector('navLabel text')?.textContent?.trim()
+    const src = navPoint.querySelector('content')?.getAttribute('src')
+    if (label && src) {
+      // Normalize the href
+      const href = opfDir + src.split('#')[0]
+      chapters.push({ title: label, href })
+    }
+  })
+  return chapters
+}
+
+// Parse NAV file (EPUB3) for table of contents
+function parseNAV(navContent, opfDir) {
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(navContent, 'application/xhtml+xml')
+
+  const chapters = []
+  const nav = doc.querySelector('nav[epub\\:type="toc"], nav[*|type="toc"], nav')
+  if (nav) {
+    nav.querySelectorAll('a').forEach(a => {
+      const label = a.textContent?.trim()
+      const src = a.getAttribute('href')
+      if (label && src) {
+        const href = opfDir + src.split('#')[0]
+        chapters.push({ title: label, href })
+      }
+    })
+  }
+  return chapters
 }
 
 // Clean up extracted text
@@ -87,11 +145,82 @@ export async function parseEPUB(file) {
   }
 
   const opfContent = await opfFile.async('string')
-  const { spine, title } = parseOPF(opfContent, opfPath)
+  const { spine, title, manifest } = parseOPF(opfContent, opfPath)
+  const opfDir = opfPath.substring(0, opfPath.lastIndexOf('/') + 1)
 
-  // Extract text from each spine item in order
+  // Try to find and parse table of contents
+  let tocChapters = []
+
+  // Look for NCX file (EPUB2)
+  for (const [, item] of Object.entries(manifest)) {
+    if (item.mediaType === 'application/x-dtbncx+xml') {
+      const ncxFile = zip.file(item.href)
+      if (ncxFile) {
+        const ncxContent = await ncxFile.async('string')
+        tocChapters = parseNCX(ncxContent, opfDir)
+        break
+      }
+    }
+  }
+
+  // If no NCX, look for NAV file (EPUB3)
+  if (tocChapters.length === 0) {
+    for (const [, item] of Object.entries(manifest)) {
+      if (item.href.includes('nav') || item.mediaType === 'application/xhtml+xml') {
+        const navFile = zip.file(item.href)
+        if (navFile) {
+          const navContent = await navFile.async('string')
+          const parsed = parseNAV(navContent, opfDir)
+          if (parsed.length > 0) {
+            tocChapters = parsed
+            break
+          }
+        }
+      }
+    }
+  }
+
+  // Create a map of href to chapter info from TOC
+  const tocMap = new Map()
+  tocChapters.forEach(ch => {
+    tocMap.set(ch.href, ch.title)
+  })
+
+  // Extract text from each spine item in order, tracking chapter boundaries
+  const chapters = []
+  let wordCount = 0
+
+  for (const href of spine) {
+    const contentFile = zip.file(href)
+    if (contentFile) {
+      const html = await contentFile.async('string')
+      const text = extractTextFromHTML(html)
+      const cleanedText = text.trim()
+
+      if (cleanedText) {
+        // Determine chapter title
+        let chapterTitle = tocMap.get(href)
+        if (!chapterTitle) {
+          chapterTitle = extractChapterTitle(html)
+        }
+
+        // Only add as a chapter if we have a title or it's from the TOC
+        if (chapterTitle || tocMap.has(href)) {
+          chapters.push({
+            title: chapterTitle || `Section ${chapters.length + 1}`,
+            startIndex: wordCount
+          })
+        }
+
+        // Count words in this section
+        const sectionWords = cleanedText.split(/\s+/).filter(w => w.length > 0)
+        wordCount += sectionWords.length
+      }
+    }
+  }
+
+  // Re-extract full text (simpler approach)
   const textParts = []
-
   for (const href of spine) {
     const contentFile = zip.file(href)
     if (contentFile) {
@@ -107,6 +236,7 @@ export async function parseEPUB(file) {
 
   return {
     title,
-    text: fullText
+    text: fullText,
+    chapters: chapters.length > 1 ? chapters : null
   }
 }

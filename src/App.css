@@ -536,6 +536,84 @@
   color: #555;
 }
 
+/* Clickable Progress Bar */
+.progress-bar.clickable {
+  cursor: pointer;
+}
+
+.progress-bar.clickable:hover {
+  background: #2a2a2a;
+}
+
+/* Chapters Panel */
+.chapters-panel {
+  width: 100%;
+  max-width: 700px;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.chapters-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #888;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chapters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chapter-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid #222;
+  border-radius: 6px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.chapter-item:hover {
+  background: #1a1a1a;
+  border-color: #333;
+}
+
+.chapter-item.active {
+  background: #1a1a1a;
+  border-color: #e63946;
+}
+
+.chapter-number {
+  font-size: 0.75rem;
+  color: #555;
+  min-width: 24px;
+}
+
+.chapter-name {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-item.active .chapter-name {
+  color: #e63946;
+}
+
 @media (max-width: 600px) {
   .title {
     font-size: 2rem;

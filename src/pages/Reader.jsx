@@ -73,6 +73,8 @@ function Reader() {
   const [wpm, setWpm] = useState(location.state?.wpm || 300)
   const [showContext, setShowContext] = useState(false)
   const [variableTiming, setVariableTiming] = useState(true)
+  const [showChapters, setShowChapters] = useState(false)
+  const [chapters, setChapters] = useState(null)
   const [notFound, setNotFound] = useState(false)
   const intervalRef = useRef(null)
   const textIdRef = useRef(id)
@@ -94,6 +96,7 @@ function Reader() {
 
     setWords(cleanedWords)
     setCurrentIndex(savedText.progress || 0)
+    setChapters(savedText.chapters || null)
     setIsPlaying(true)
   }, [id])
 
@@ -140,6 +143,30 @@ function Reader() {
   const toggleVariableTiming = useCallback(() => {
     setVariableTiming(prev => !prev)
   }, [])
+
+  const toggleChapters = useCallback(() => {
+    setShowChapters(prev => {
+      if (!prev) setIsPlaying(false)
+      return !prev
+    })
+  }, [])
+
+  const goToChapter = useCallback((startIndex) => {
+    setCurrentIndex(startIndex)
+    setShowChapters(false)
+    setIsPlaying(true)
+  }, [])
+
+  // Get current chapter
+  const getCurrentChapter = useCallback(() => {
+    if (!chapters) return null
+    for (let i = chapters.length - 1; i >= 0; i--) {
+      if (currentIndex >= chapters[i].startIndex) {
+        return i
+      }
+    }
+    return 0
+  }, [chapters, currentIndex])
 
   const adjustWpm = useCallback((delta) => {
     setWpm(prev => Math.min(1000, Math.max(100, prev + delta)))
@@ -201,12 +228,14 @@ function Reader() {
         toggleContext()
       } else if (e.code === 'KeyV') {
         toggleVariableTiming()
+      } else if (e.code === 'KeyT' && chapters) {
+        toggleChapters()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [togglePlay, goBack, toggleContext, toggleVariableTiming, adjustWpm, words.length])
+  }, [togglePlay, goBack, toggleContext, toggleVariableTiming, toggleChapters, adjustWpm, words.length, chapters])
 
   if (notFound) {
     return (
@@ -258,7 +287,35 @@ function Reader() {
         </div>
       )}
 
-      <div className="progress-bar">
+      {showChapters && chapters && (
+        <div className="chapters-panel">
+          <h3 className="chapters-title">Chapters</h3>
+          <div className="chapters-list">
+            {chapters.map((chapter, i) => (
+              <button
+                key={i}
+                className={`chapter-item ${getCurrentChapter() === i ? 'active' : ''}`}
+                onClick={() => goToChapter(chapter.startIndex)}
+                title={`Jump to ${chapter.title}`}
+              >
+                <span className="chapter-number">{i + 1}</span>
+                <span className="chapter-name">{chapter.title}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div
+        className="progress-bar clickable"
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const percent = (e.clientX - rect.left) / rect.width
+          const newIndex = Math.floor(percent * words.length)
+          setCurrentIndex(Math.max(0, Math.min(words.length - 1, newIndex)))
+        }}
+        title="Click to jump to position"
+      >
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
       </div>
 
@@ -275,6 +332,11 @@ function Reader() {
         <button onClick={toggleVariableTiming} className={`control-button ${variableTiming ? 'active' : ''}`} title="Adjust timing based on word complexity (V)">
           Variable
         </button>
+        {chapters && (
+          <button onClick={toggleChapters} className={`control-button ${showChapters ? 'active' : ''}`} title="Show chapter navigation (T)">
+            Chapters
+          </button>
+        )}
         <button onClick={togglePlay} className="control-button play-button" title={isPlaying ? 'Pause reading (Space)' : 'Start reading (Space)'}>
           {isPlaying ? 'Pause' : 'Play'}
         </button>
@@ -303,7 +365,7 @@ function Reader() {
       </div>
 
       <p className="keyboard-hint">
-        Space: play/pause | ←→: words | ↑↓: speed | C: context | V: variable timing | Esc: back
+        Space: play/pause | ←→: words | ↑↓: speed | C: context | V: variable{chapters ? ' | T: chapters' : ''} | Esc: back
       </p>
     </div>
   )

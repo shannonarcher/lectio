@@ -34,7 +34,7 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
     setError(null)
 
     try {
-      const { title, text: epubText } = await parseEPUB(file)
+      const { title, text: epubText, chapters } = await parseEPUB(file)
 
       const cleanedWords = epubText
         .trim()
@@ -51,6 +51,7 @@ There was nothing so very remarkable in that; nor did Alice think it so very muc
         preview: title || getPreview(epubText),
         progress: 0,
         totalWords: cleanedWords.length,
+        chapters: chapters,
         createdAt: Date.now(),
         updatedAt: Date.now()
       }
