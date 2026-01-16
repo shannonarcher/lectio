@@ -106,7 +106,7 @@ function About() {
         </ul>
       </section>
 
-      <section className="about-section last">
+      <section className="about-section">
         <h2>Limitations</h2>
         <p>
           RSVP isn't ideal for all content. Technical material, poetry, or text requiring
@@ -114,6 +114,42 @@ function About() {
           re-read naturally. Use Lectio for articles, books, and content where flow matters
           more than deep scrutiny.
         </p>
+      </section>
+
+      <section className="about-section last">
+        <h2>Further Reading</h2>
+        <ul className="references-list">
+          <li>
+            <a href="https://doi.org/10.1177/1529100615623267" target="_blank" rel="noopener noreferrer">
+              So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help?
+            </a>
+            <p>
+              Rayner et al. (2016) review psychological research on reading and evaluate speed reading
+              methods including RSVP. They find a trade-off between speed and accuracy, noting that
+              RSVP prevents the backward eye movements needed to correct comprehension failures.
+            </p>
+          </li>
+          <li>
+            <a href="https://doi.org/10.1016/S0022-5371(80)90628-3" target="_blank" rel="noopener noreferrer">
+              Subvocalization and Reading for Meaning
+            </a>
+            <p>
+              Slowiaczek &amp; Clifton (1980) demonstrate that subvocalization aids comprehension,
+              particularly for integrating concepts across sentences. Blocking inner speech impairs
+              reading comprehension but not listening comprehension.
+            </p>
+          </li>
+          <li>
+            <a href="https://www.lesswrong.com/posts/bxkEshxKnRde97bmW/the-comprehension-curve" target="_blank" rel="noopener noreferrer">
+              The Comprehension Curve
+            </a>
+            <p>
+              This essay argues that each reader has an optimal speed for maximizing comprehension—like
+              the Laffer Curve for taxation. Speed reading assumes you're below this optimum, but the
+              personal and contextual nature of reading means this isn't always true.
+            </p>
+          </li>
+        </ul>
       </section>
     </div>
   )
