@@ -138,6 +138,12 @@
   letter-spacing: 0.05em;
 }
 
+.speed-note {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
 .references-list {
   list-style: none;
   padding-left: 0;

@@ -11,31 +11,29 @@ function About() {
       <h1 className="about-title">About Lectio</h1>
 
       <section className="about-section">
-        <h2>Rapid Serial Visual Presentation</h2>
+        <h2>What is RSVP?</h2>
         <p>
-          Lectio uses a technique called <strong>RSVP</strong> (Rapid Serial Visual Presentation),
-          a method of displaying text one word at a time in a fixed position. Unlike traditional
-          reading where your eyes must move across lines and jump between words, RSVP eliminates
-          eye movement entirely—the words come to you.
+          Lectio uses <strong>RSVP</strong> (Rapid Serial Visual Presentation),
+          a method of displaying text one word at a time in a fixed position. Instead of
+          moving your eyes across lines, words appear sequentially in the same spot.
         </p>
         <p>
-          This approach was first developed in the 1970s by researchers studying reading
-          comprehension and has since been refined for speed reading applications. By removing
-          the physical act of scanning text, readers can focus purely on processing meaning.
+          This technique was developed in the 1970s by researchers studying reading and
+          has since been adapted into speed reading applications. The premise is simple:
+          eliminate eye movement and you can process words faster.
         </p>
       </section>
 
       <section className="about-section">
         <h2>The Optimal Recognition Point</h2>
         <p>
-          When you read a word, your eyes don't focus on the center—they naturally land slightly
-          left of middle, at what researchers call the <strong>Optimal Recognition Point (ORP)</strong>.
-          This is the position where the brain can most efficiently recognize the entire word.
+          When you read a word, your eyes naturally land slightly left of center, at what
+          researchers call the <strong>Optimal Recognition Point (ORP)</strong>. This is
+          where the brain most efficiently recognizes words.
         </p>
         <p>
-          Lectio calculates the ORP for each word and aligns it to a fixed focal point on screen,
-          highlighted in red. This means your eyes never need to adjust—every word is perfectly
-          positioned for instant recognition.
+          Lectio calculates the ORP for each word and aligns it to a fixed focal point,
+          highlighted in red. Your eyes stay in one place while words stream past.
         </p>
         <div className="orp-demo">
           <div className="demo-word">
@@ -48,32 +46,37 @@ function About() {
       </section>
 
       <section className="about-section">
-        <h2>Why It Works</h2>
+        <h2>The Trade-off</h2>
         <p>
-          Traditional reading involves three time-consuming processes:
+          Here's what the research actually shows: <strong>RSVP increases speed at the
+          cost of comprehension</strong>. This isn't a minor caveat—it's the fundamental
+          trade-off you're making.
         </p>
-        <ul>
-          <li><strong>Saccades</strong> — rapid eye movements between words</li>
-          <li><strong>Fixations</strong> — brief pauses where the eye focuses on a word</li>
-          <li><strong>Regressions</strong> — backward movements to re-read missed content</li>
-        </ul>
         <p>
-          Studies suggest these mechanical processes consume up to 80% of reading time. RSVP
-          with ORP alignment eliminates saccades and reduces regressions, allowing the brain
-          to dedicate more resources to comprehension rather than navigation.
+          Normal reading involves backward eye movements called <strong>regressions</strong>.
+          These aren't inefficiencies to be eliminated—they're how you repair comprehension
+          failures, re-read confusing passages, and integrate meaning across sentences.
+          RSVP makes regressions impossible. Miss something and it's gone.
+        </p>
+        <p>
+          Research also shows that <strong>subvocalization</strong> (silently sounding out
+          words) aids comprehension, particularly for connecting ideas across sentences.
+          Speed reading techniques often encourage suppressing this natural process.
         </p>
       </section>
 
       <section className="about-section">
-        <h2>Finding Your Speed</h2>
+        <h2>The Comprehension Curve</h2>
         <p>
-          Average reading speed is around 200-250 words per minute. With practice, many
-          RSVP readers comfortably reach 400-600 WPM while maintaining good comprehension.
-          Some can push beyond 1000 WPM for familiar material.
+          Everyone has an optimal reading speed—the pace at which they absorb the most
+          information per unit of time. Read too slowly and you waste time. Read too fast
+          and comprehension drops faster than speed increases, so you actually absorb less.
         </p>
         <p>
-          Start at a comfortable pace and gradually increase. The goal isn't maximum speed—it's
-          finding the rate where you absorb information efficiently without strain.
+          Speed reading assumes most people read below their optimum and could comprehend
+          more by reading faster. But this assumption isn't always true. Your optimal speed
+          varies by text difficulty, familiarity with the subject, and your goals. For
+          challenging material, your natural pace may already be optimal—or even too fast.
         </p>
         <div className="speed-guide">
           <div className="speed-tier">
@@ -93,26 +96,24 @@ function About() {
             <span className="speed-label">Sprint</span>
           </div>
         </div>
+        <p className="speed-note">
+          Higher speeds will reduce comprehension. That might be acceptable depending
+          on your goals, but don't expect to read at 600 WPM with full understanding.
+        </p>
       </section>
 
       <section className="about-section">
-        <h2>Tips for Better Results</h2>
+        <h2>When RSVP Makes Sense</h2>
         <ul>
-          <li>Minimize distractions—RSVP requires focus</li>
-          <li>Take breaks every 10-15 minutes to avoid fatigue</li>
-          <li>Start with familiar or lighter content when training at higher speeds</li>
-          <li>Don't subvocalize (sound out words mentally)—let meaning emerge directly</li>
-          <li>Trust the process; comprehension often improves with practice</li>
+          <li>Skimming content to decide if it's worth reading carefully</li>
+          <li>Light material where missing details doesn't matter</li>
+          <li>Re-reading something you've already absorbed once</li>
+          <li>When you genuinely need speed more than depth</li>
         </ul>
-      </section>
-
-      <section className="about-section">
-        <h2>Limitations</h2>
         <p>
-          RSVP isn't ideal for all content. Technical material, poetry, or text requiring
-          careful analysis may benefit from traditional reading where you can pause and
-          re-read naturally. Use Lectio for articles, books, and content where flow matters
-          more than deep scrutiny.
+          RSVP is a tool with specific uses, not a superior way to read. For material
+          that matters—anything you need to understand, remember, or think critically
+          about—traditional reading is more effective.
         </p>
       </section>
 
@@ -124,9 +125,10 @@ function About() {
               So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help?
             </a>
             <p>
-              Rayner et al. (2016) review psychological research on reading and evaluate speed reading
-              methods including RSVP. They find a trade-off between speed and accuracy, noting that
-              RSVP prevents the backward eye movements needed to correct comprehension failures.
+              Rayner et al. (2016) review the science of reading and find that speed-accuracy
+              trade-offs are unavoidable. RSVP prevents the regressions needed to correct
+              misunderstandings. The way to read faster is to become a more skilled reader
+              through practice and vocabulary building—not technological shortcuts.
             </p>
           </li>
           <li>
@@ -135,8 +137,8 @@ function About() {
             </a>
             <p>
               Slowiaczek &amp; Clifton (1980) demonstrate that subvocalization aids comprehension,
-              particularly for integrating concepts across sentences. Blocking inner speech impairs
-              reading comprehension but not listening comprehension.
+              especially for integrating concepts across sentences. Suppressing inner speech—a
+              common speed reading recommendation—impairs understanding.
             </p>
           </li>
           <li>
@@ -144,9 +146,9 @@ function About() {
               The Comprehension Curve
             </a>
             <p>
-              This essay argues that each reader has an optimal speed for maximizing comprehension—like
-              the Laffer Curve for taxation. Speed reading assumes you're below this optimum, but the
-              personal and contextual nature of reading means this isn't always true.
+              This essay introduces the idea that each reader has an optimal speed for maximizing
+              total comprehension. Speed reading only helps if you're currently reading below
+              that optimum—which isn't a safe assumption.
             </p>
           </li>
         </ul>
